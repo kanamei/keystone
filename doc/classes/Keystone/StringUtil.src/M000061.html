@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>serach_string_to_array (Keystone::StringUtil)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/keystone/string_util.rb, line 48</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">serach_string_to_array</span>(<span class="ruby-identifier">query</span>)
+      <span class="ruby-identifier">tokens</span> = <span class="ruby-identifier">query</span>.<span class="ruby-identifier">scan</span>(<span class="ruby-node">/'([^']*)'|&quot;([^&quot;]*)&quot;|([^\s#{MULTIBYTE_SPACE}]*)/</span>).<span class="ruby-identifier">flatten</span>.<span class="ruby-identifier">reject</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;&quot;</span> }
+      <span class="ruby-identifier">tokens</span>.<span class="ruby-identifier">map</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">token</span>
+        <span class="ruby-comment cmt">#token.gsub!(PRESERVED_QUERY_WORDS_RE, $1.downcase) if token =~ PRESERVED_QUERY_WORDS_RE</span>
+        <span class="ruby-identifier">token</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/\A['&quot;]|['&quot;]\z/</span>, <span class="ruby-value str">''</span>) <span class="ruby-comment cmt"># strip quatos</span>
+        <span class="ruby-identifier">token</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

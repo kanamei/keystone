@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>int_to_splitted_path (Keystone::StringUtil)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/keystone/string_util.rb, line 3</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">int_to_splitted_path</span>(<span class="ruby-identifier">i_value</span>,<span class="ruby-identifier">value_length</span>,<span class="ruby-identifier">base_folder</span>,<span class="ruby-identifier">suffix</span>=<span class="ruby-value str">&quot;&quot;</span>)
+      <span class="ruby-identifier">file_name</span> = <span class="ruby-constant">Integer</span>(<span class="ruby-identifier">i_value</span>).<span class="ruby-identifier">to_s</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">RangeError</span>,<span class="ruby-value str">&quot;value_length must bigger than 0&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value_length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">RangeError</span>, <span class="ruby-value str">'i_value length is bigger than value_length'</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">file_name</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value_length</span>
+      <span class="ruby-identifier">file_name</span> = <span class="ruby-identifier">file_name</span>.<span class="ruby-identifier">rjust</span>(<span class="ruby-identifier">value_length</span>, <span class="ruby-value str">'0'</span>)
+      <span class="ruby-identifier">new_path</span> = <span class="ruby-identifier">base_folder</span>.<span class="ruby-identifier">dup</span>
+      <span class="ruby-identifier">group_regex</span> = <span class="ruby-value str">&quot;&quot;</span>
+      <span class="ruby-identifier">i</span> = <span class="ruby-identifier">value_length</span>
+      <span class="ruby-identifier">group_cnt</span> = <span class="ruby-value">0</span>
+      <span class="ruby-identifier">loop</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-identifier">group_cnt</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">2</span>
+          <span class="ruby-identifier">group_regex</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;(\\d\\d\\d)&quot;</span>
+          <span class="ruby-identifier">i</span> <span class="ruby-operator">-=</span> <span class="ruby-value">3</span>
+          <span class="ruby-keyword kw">break</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">group_regex</span> = <span class="ruby-node">&quot;(#{&quot;\\d&quot;*i})&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">group_regex</span>
+          <span class="ruby-keyword kw">break</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">file_name</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-node">/#{group_regex}/</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hit</span><span class="ruby-operator">|</span>
+        <span class="ruby-value">1</span>.<span class="ruby-identifier">upto</span>(<span class="ruby-identifier">group_cnt</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">new_path</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;/#{Regexp.last_match[i]}&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">new_path</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">suffix</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">suffix</span> <span class="ruby-operator">!=</span> <span class="ruby-value str">&quot;&quot;</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">new_path</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

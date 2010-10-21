@@ -1,0 +1,93 @@
+#!/usr/bin/ruby
+
+require 'rubygems'
+require 'activesupport'
+require 'meow'
+require 'pit'
+require 'keystone'
+
+config = Pit.get("notice")
+MAIL_TO = config["mailto"]
+MAIL_FROM = config["mailfrom"]
+
+def ppp(message)
+  print message
+  STDOUT.flush
+end
+
+class GrowlMessage
+  attr_accessor :execute_at,:message
+  def initialize
+    @message = ""
+    @execute_at = Time.now
+  end
+end
+
+if ARGV.size > 0 && ARGV[0] == "-f"
+  message = Marshal.load(File.open(ARGV[1]))
+  File.delete(ARGV[1])
+  loop do
+    break if message.execute_at < Time.now
+    sleep 30
+  end
+  
+  begin
+    Keystone::Mail::Send.send(MAIL_FROM,MAIL_TO,message.message,message.message)
+  rescue 
+  end
+  
+  meep = Meow.new("growl_notify")
+  option = {:sticky=>true,:priority=>1}
+  message_text = "#{message.execute_at.strftime("%Y/%m/%d %H:%M:%S")}\n#{message.message}"
+  meep.notify("growl_notify",message_text,option)
+  exit
+end
+
+INPUT_TIME_MESSAGE = "when?(NN(minutes later) or NNh(hours later) or HH:MM(time format)):"
+message = GrowlMessage.new
+
+ppp "message:"
+STDIN.each_line do |line|
+  line.chomp!
+  exit if line == ""
+  message.message = line
+  break
+end
+
+ppp INPUT_TIME_MESSAGE
+STDIN.each_line do |line|
+  line.chomp!
+  minutes = 5
+  begin
+    minutes = Integer(line)
+    message.execute_at += minutes * 60
+    break
+  rescue
+    begin
+      if line =~ /(\d+):(\d+)/
+        hour,minute= Integer($1),Integer($2)
+        execute_at_candidate = message.execute_at.change(:hour => hour,:min => minute)
+        if execute_at_candidate < message.execute_at
+          execute_at_candidate += 60 * 60 * 24
+        end
+        message.execute_at = execute_at_candidate
+        break
+      elsif line =~ /(\d+)h/
+        hours = Integer($1)
+        message.execute_at += hours * 60 * 60
+        break
+      end
+    rescue => e
+      puts e
+    end
+  end
+  puts "invalid format"
+  ppp INPUT_TIME_MESSAGE
+end
+
+path = "/tmp/.gw_message.#{Time.now.tv_usec}"
+Marshal.dump(message,File.new(path, 'w'))
+cmd = "notice -f #{path} &"
+#puts cmd
+system cmd
+

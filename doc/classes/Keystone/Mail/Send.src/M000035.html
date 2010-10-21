@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>send (Keystone::Mail::Send)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/keystone/mail/send.rb, line 15</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">from</span>,<span class="ruby-identifier">to</span>,<span class="ruby-identifier">title</span>,<span class="ruby-identifier">body</span>,<span class="ruby-identifier">smtp_addr</span>=<span class="ruby-value str">&quot;127.0.0.1&quot;</span>,<span class="ruby-identifier">smtp_port</span>=<span class="ruby-value">25</span>)
+        <span class="ruby-identifier">from_addr</span>,<span class="ruby-identifier">from_addr_4_header</span> = <span class="ruby-identifier">create_addr_and_header</span>(<span class="ruby-identifier">from</span>)
+        <span class="ruby-identifier">title</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/(\r|\n)/</span>,<span class="ruby-value str">&quot;&quot;</span>)
+        
+        <span class="ruby-identifier">subject_header</span> = <span class="ruby-value str">&quot;&quot;</span>
+        <span class="ruby-identifier">title</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">//</span>).<span class="ruby-identifier">split_by</span>(<span class="ruby-value">10</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">subject</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">st</span> = <span class="ruby-identifier">subject</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">''</span>)
+          <span class="ruby-identifier">st</span> = <span class="ruby-constant">Kconv</span>.<span class="ruby-identifier">tojis</span>(<span class="ruby-identifier">st</span>)
+          <span class="ruby-identifier">st</span> = <span class="ruby-identifier">st</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">//</span>,<span class="ruby-value">1</span>).<span class="ruby-identifier">pack</span>(<span class="ruby-value str">'m'</span>); <span class="ruby-identifier">st</span> = <span class="ruby-identifier">st</span>.<span class="ruby-identifier">chomp</span>
+          <span class="ruby-identifier">subject_header</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot; =?ISO-2022-JP?B?#{st}?=\n&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">to</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'Array'</span>
+          <span class="ruby-identifier">tomany</span> = <span class="ruby-identifier">to</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">','</span>)
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">tomany</span> = <span class="ruby-identifier">to</span>.<span class="ruby-identifier">to_s</span>;
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">head</span> = <span class="ruby-value str">&quot;Subject: \#{subject_header}To: \#{tomany}\nFrom: \#{from_addr_4_header}\nMime-Version: 1.0\nContent-Transfer-Encoding: 7bit\nContent-Type: Text/Plain; charset=iso-2022-jp\n&quot;</span>
+
+        <span class="ruby-identifier">src</span> = <span class="ruby-identifier">head</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;\n&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Kconv</span>.<span class="ruby-identifier">tojis</span>(<span class="ruby-identifier">body</span>)
+    <span class="ruby-comment cmt">#    puts src</span>
+        <span class="ruby-identifier">m</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPSession</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">smtp_addr</span>, <span class="ruby-identifier">smtp_port</span>)
+        <span class="ruby-identifier">m</span>.<span class="ruby-identifier">start</span>()
+        <span class="ruby-identifier">m</span>.<span class="ruby-identifier">sendmail</span>(<span class="ruby-identifier">src</span>, <span class="ruby-identifier">from_addr</span>, <span class="ruby-identifier">to</span>)
+        <span class="ruby-identifier">m</span>.<span class="ruby-identifier">finish</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

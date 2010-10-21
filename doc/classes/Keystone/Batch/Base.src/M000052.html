@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>execute (Keystone::Batch::Base)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/keystone/batch/base.rb, line 42</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">execute</span>(<span class="ruby-identifier">double_process_check</span> = <span class="ruby-keyword kw">true</span>,<span class="ruby-identifier">auto_recover</span> = <span class="ruby-keyword kw">true</span>,<span class="ruby-operator">&amp;</span><span class="ruby-identifier">process</span>)
+      <span class="ruby-identifier">info</span> <span class="ruby-node">&quot;start script(#{File.expand_path($0)})&quot;</span>
+      <span class="ruby-identifier">warn</span> <span class="ruby-value str">&quot;ERROR_MAIL_TO not defined.if you want error mail automatically,set this value.&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">Module</span>.<span class="ruby-identifier">constants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;ERROR_MAIL_TO&quot;</span>)
+      <span class="ruby-identifier">script_started_at</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+      <span class="ruby-keyword kw">begin</span>
+        <span class="ruby-comment cmt"># double process check</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">double_process_check</span>
+          <span class="ruby-identifier">pg_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">$0</span>)
+          <span class="ruby-identifier">pg_name</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">pg_path</span>)
+          <span class="ruby-identifier">hash</span> = <span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">pg_path</span>)
+          <span class="ruby-identifier">pid_file</span> = <span class="ruby-node">&quot;/tmp/.#{pg_name}.#{hash}.pid&quot;</span>
+          <span class="ruby-identifier">debug</span> <span class="ruby-identifier">pid_file</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-identifier">pid_file</span>)
+            <span class="ruby-identifier">pid</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">pid_file</span>).<span class="ruby-identifier">read</span>.<span class="ruby-identifier">chomp</span>
+            <span class="ruby-identifier">pid_list</span> = <span class="ruby-value">`ps -e | awk '{print $1}'`</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pid_list</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/#{pid}/</span>
+              <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;pid:#{pid} still running&quot;</span>
+              <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">auto_recover</span>
+                <span class="ruby-identifier">warn</span> <span class="ruby-value str">&quot;pid file still exists,but process does not found.so process continues&quot;</span>
+              <span class="ruby-keyword kw">else</span>
+                <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;pid file still exists,but process does not found&quot;</span>
+              <span class="ruby-keyword kw">end</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">pid_file</span>, <span class="ruby-value str">&quot;w&quot;</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">file</span>.<span class="ruby-identifier">write</span> <span class="ruby-identifier">$$</span>
+          }
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">return</span> (<span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">process</span>)
+      <span class="ruby-keyword kw">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">error</span> <span class="ruby-identifier">e</span>
+        <span class="ruby-identifier">send_error_mail</span>(<span class="ruby-identifier">e</span>)
+      <span class="ruby-keyword kw">ensure</span>
+        <span class="ruby-constant">File</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">pid_file</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">double_process_check</span>
+        <span class="ruby-identifier">info</span> <span class="ruby-value str">&quot;finish script (%1.3fsec)&quot;</span> <span class="ruby-operator">%</span> (<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">script_started_at</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

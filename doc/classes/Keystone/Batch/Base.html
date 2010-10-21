@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Keystone::Batch::Base</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Keystone::Batch::Base</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../files/lib/keystone/batch/base_rb.html">
+                lib/keystone/batch/base.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <h1>バッチをざくっと書きたい時用モジュール</h1>
+<p>
+基本的には<a
+href="Base.html#M000052">execute</a>メソッドにバッチ処理をブロックで渡す
+</p>
+<h2>定数</h2>
+<p>
+ERROR_MAIL_TO （エラーメール送信先）
+設定しておけば自動でエラーメールを送信してくれる
+</p>
+<p>
+ERROR_MAIL_FROM （エラーメール送信元）
+設定されてない場合はERROR_MAIL_TOを使用
+</p>
+<p>
+ERROR_MAIL_STMP_ADDR （エラーメール送信SMTPアドレス）
+設定されてない場合は&quot;127.0.0.1&quot;
+</p>
+<p>
+ERROR_MAIL_STMP_PORT （エラーメール送信SMTPポート）
+設定されてない場合は25
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000052">execute</a>&nbsp;&nbsp;
+      <a href="#M000053">send_error_mail</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000052" class="method-detail">
+        <a name="M000052"></a>
+
+        <div class="method-heading">
+          <a href="Base.src/M000052.html" target="Code" class="method-signature"
+            onclick="popupCode('Base.src/M000052.html');return false;">
+          <span class="method-name">execute</span><span class="method-args">(double_process_check = true,auto_recover = true) {|process)| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <dl>
+<dt>double_process_check</dt><dd>2重起動チェック
+
+</dd>
+<dt>auto_recover</dt><dd>2重起動チェック用のpidファイルがすでに存在しているがプロセスは見あたらない
+そんな時、そのまま実行を続けるかどうか
+
+</dd>
+</dl>
+<p>
+バッチの主処理をこのメソッドへのブロック引数として定義してください
+</p>
+<pre>
+  require 'rubygems'
+  require 'keystone'
+
+  include Keystone::Batch::Base
+
+  # ERROR_MAIL_TOを設定しておけば自動でエラーメールが送信される
+  ERROR_MAIL_TO = ARGV[0]
+
+  execute() do
+    info &quot;batch process01&quot;
+  end
+</pre>
+        </div>
+      </div>
+
+      <div id="method-M000053" class="method-detail">
+        <a name="M000053"></a>
+
+        <div class="method-heading">
+          <a href="Base.src/M000053.html" target="Code" class="method-signature"
+            onclick="popupCode('Base.src/M000053.html');return false;">
+          <span class="method-name">send_error_mail</span><span class="method-args">(exception)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <h1>エラーメール送信メソッド</h1>
+<pre>
+ エクセプションを何も考えずにメールにて送信する
+</pre>
+<p>
+　各種メール送信属性は定数にて渡す
+</p>
+<dl>
+<dt>exception</dt><dd>エクセプションクラスインスタンス
+
+</dd>
+</dl>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

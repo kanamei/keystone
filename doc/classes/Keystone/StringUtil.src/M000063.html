@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>to_searchtext (Keystone::StringUtil)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/keystone/string_util.rb, line 68</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-identifier">str</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">downcase_roma_number</span>(<span class="ruby-constant">Moji</span>.<span class="ruby-identifier">han_to_zen</span>(
+          <span class="ruby-comment cmt">#Moji.zen_to_han(str,Moji::ZEN_ALNUM | Moji::ZEN_SYMBOL).downcase,Moji::HAN_KATA | Moji::HAN_JSYMBOL).tr(&quot;ｰ～／&quot;,&quot;ー~/&quot;)</span>
+          <span class="ruby-constant">Moji</span>.<span class="ruby-identifier">zen_to_han</span>(<span class="ruby-identifier">str</span>,<span class="ruby-constant">Moji</span><span class="ruby-operator">::</span><span class="ruby-constant">ZEN_ALNUM</span> <span class="ruby-operator">|</span> <span class="ruby-constant">Moji</span><span class="ruby-operator">::</span><span class="ruby-constant">ZEN_SYMBOL</span>).<span class="ruby-identifier">downcase</span>,<span class="ruby-constant">Moji</span><span class="ruby-operator">::</span><span class="ruby-constant">HAN_KATA</span> <span class="ruby-operator">|</span> <span class="ruby-constant">Moji</span><span class="ruby-operator">::</span><span class="ruby-constant">HAN_JSYMBOL</span>)
+      )
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>send_error_mail (Keystone::Batch::Base)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/keystone/batch/base.rb, line 90</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_error_mail</span>(<span class="ruby-identifier">exception</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Module</span>.<span class="ruby-identifier">constants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;ERROR_MAIL_TO&quot;</span>)
+        <span class="ruby-identifier">host</span> = <span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">Os</span>.<span class="ruby-identifier">get</span>()
+        <span class="ruby-identifier">title</span> = <span class="ruby-node">%|error occur at &quot;#{host.hostname}&quot; [#{error.message}]|</span>
+        
+        <span class="ruby-identifier">mail_to</span> = <span class="ruby-constant">ERROR_MAIL_TO</span>
+        <span class="ruby-identifier">mail_to</span> = [<span class="ruby-identifier">mail_to</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">mail_to</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)
+        <span class="ruby-identifier">mail_from</span> = <span class="ruby-constant">Module</span>.<span class="ruby-identifier">constants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;ERROR_MAIL_FROM&quot;</span>) <span class="ruby-operator">?</span>  <span class="ruby-constant">ERROR_MAIL_FROM</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">mail_to</span>[<span class="ruby-value">0</span>]
+        <span class="ruby-identifier">smtp_addr</span> = <span class="ruby-constant">Module</span>.<span class="ruby-identifier">constants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;ERROR_MAIL_STMP_ADDR&quot;</span>) <span class="ruby-operator">?</span>  <span class="ruby-constant">ERROR_MAIL_STMP_ADDR</span> <span class="ruby-operator">:</span> <span class="ruby-value str">'127.0.0.1'</span>
+        <span class="ruby-identifier">smtp_port</span> = <span class="ruby-constant">Module</span>.<span class="ruby-identifier">constants</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-value str">&quot;ERROR_MAIL_STMP_PORT&quot;</span>) <span class="ruby-operator">?</span>  <span class="ruby-constant">ERROR_MAIL_STMP_PORT</span> <span class="ruby-operator">:</span> <span class="ruby-value">25</span>
+        
+        <span class="ruby-identifier">body</span>  = <span class="ruby-value str">&quot;==== error message ====\n\#{exception.message}\n====== backtrace ======\n\#{exception.backtrace.join(\&quot;\\n\&quot;)}\n===== environment =====\n\#{host.dump}\n&quot;</span>
+        <span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">Mail</span><span class="ruby-operator">::</span><span class="ruby-constant">Send</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">mail_from</span>,<span class="ruby-identifier">mail_to</span>,<span class="ruby-identifier">title</span>,<span class="ruby-identifier">body</span>,<span class="ruby-identifier">smtp_addr</span>,<span class="ruby-identifier">smtp_port</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

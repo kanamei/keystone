@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>test_to_searchtext (TestStringUtilBase)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File test/test_string_util.rb, line 41</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_to_searchtext</span>
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;日本語&quot;</span>),<span class="ruby-value str">&quot;日本語&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;カタカナ&quot;</span>),<span class="ruby-value str">&quot;カタカナ&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;ﾊﾝｶｸ&quot;</span>),<span class="ruby-value str">&quot;ハンカク&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;A&quot;</span>),<span class="ruby-value str">&quot;a&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;１&quot;</span>),<span class="ruby-value str">&quot;1&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;ａｂＣＤ１２３４&quot;</span>),<span class="ruby-value str">&quot;abcd1234&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;スープ&quot;</span>),<span class="ruby-value str">&quot;スープ&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;ｽｰﾌﾟ&quot;</span>),<span class="ruby-value str">&quot;スープ&quot;</span>)  <span class="ruby-comment cmt"># ハンカク半濁点</span>
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;ｺｽﾞﾐｯｸﾗﾅｳｪｲ&quot;</span>),<span class="ruby-value str">&quot;コズミックラナウェイ&quot;</span>)  <span class="ruby-comment cmt"># ハンカク濁点</span>
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;ー―－‐&quot;</span>),<span class="ruby-value str">&quot;ー―-‐&quot;</span>)  <span class="ruby-comment cmt"># ハンカク濁点</span>
+    
+    
+    
+    <span class="ruby-comment cmt"># TODO</span>
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;！”＄％＆￥’（）＊＋，－．／：；＜＝＞？＠［￥］＾＿‘｛｜｝～＃&quot;</span>),<span class="ruby-value str">&quot;!\&quot;$%&amp;\\'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~#&quot;</span>) <span class="ruby-comment cmt"># 半角全角変換可能記号</span>
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;｡｢｣､ｰﾞﾟ･&quot;</span>),<span class="ruby-value str">&quot;。「」、ー゛゜・&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">to_searchtext</span>(<span class="ruby-value str">&quot;ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ&quot;</span>),<span class="ruby-value str">&quot;ⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹ&quot;</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

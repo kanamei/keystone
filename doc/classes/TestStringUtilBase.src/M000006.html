@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>test_int_to_splitted_path (TestStringUtilBase)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File test/test_string_util.rb, line 22</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">test_int_to_splitted_path</span>
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">int_to_splitted_path</span>(<span class="ruby-value">113355</span>,<span class="ruby-value">12</span>,<span class="ruby-value str">&quot;/tmp&quot;</span>,<span class="ruby-value str">&quot;.jpg&quot;</span>),<span class="ruby-value str">&quot;/tmp/000/000/113/355.jpg&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">int_to_splitted_path</span>(<span class="ruby-value">1234567890</span>,<span class="ruby-value">10</span>,<span class="ruby-value str">&quot;/temp&quot;</span>,<span class="ruby-value str">&quot;.png&quot;</span>),<span class="ruby-value str">&quot;/temp/1/234/567/890.png&quot;</span>)
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">int_to_splitted_path</span>(<span class="ruby-value">1234567890</span>,<span class="ruby-value">11</span>,<span class="ruby-value str">&quot;/temp&quot;</span>,<span class="ruby-value str">&quot;.png&quot;</span>),<span class="ruby-value str">&quot;/temp/01/234/567/890.png&quot;</span>)
+    <span class="ruby-identifier">assert_raise</span>(<span class="ruby-constant">RangeError</span>){<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">int_to_splitted_path</span>(<span class="ruby-value">12345678901</span>,<span class="ruby-value">10</span>,<span class="ruby-value str">&quot;/tmp&quot;</span>)}
+    <span class="ruby-identifier">assert_equal</span>(<span class="ruby-constant">Keystone</span><span class="ruby-operator">::</span><span class="ruby-constant">StringUtil</span>.<span class="ruby-identifier">int_to_splitted_path</span>(<span class="ruby-value">00000000000000001</span>,<span class="ruby-value">11</span>,<span class="ruby-value str">&quot;/tmp&quot;</span>,<span class="ruby-value str">&quot;.gif&quot;</span>),<span class="ruby-value str">&quot;/tmp/00/000/000/001.gif&quot;</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
