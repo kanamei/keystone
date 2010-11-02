@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'net/smtp'
 
 if __FILE__ ==$0
@@ -42,18 +43,18 @@ module Keystone
           #"=?UTF-8?B?44Gq44GM44O844O844O844O844O844O844O844O844O8?==?UTF-8?B?44O844O844O844O844O844O844O844O844O844O844O8?==?UTF-8?B?44O844O844O844O844O844O844O844O844O844O844O8?==?UTF-8?B?44O844O844O844O844O844O844O844O844O844O844O8?==?UTF-8?B?44O844O844O844O844O844O844O844O844O844O844O8?==?UTF-8?B?44O844O844O844O844O844GE44GC44Gm5YWI?=
 
           name,address = ""
-          KmClassBase::debug "line=#{line}"
+          Keystone::Base::Logger.instance.debug "line=#{line}"
 
           if /"(.*)"\s*<(.*)>/ =~ line
             # umaku dekinkatta
             name = $1.strip
             address = $2.strip
-            KmClassBase::debug "name=|#{name}|"
+            Keystone::Base::Logger.instance.debug "name=|#{name}|"
           elsif /(.*)\s*<(.*)>/ =~ line
             name = $1.strip
             address = $2.strip
-            KmClassBase::debug "name=|#{name}|"
-            KmClassBase::debug "address=|#{address}|"
+            Keystone::Base::Logger.instance.debug "name=|#{name}|"
+            Keystone::Base::Logger.instance.debug "address=|#{address}|"
           else
             address = line.strip
           end
@@ -61,17 +62,17 @@ module Keystone
       #    if /^=\?ISO-2022-JP.*/i =~ name || 
       #    if /^=\?UTF-8/i =~ name
           if /^(?:(=\?ISO-2022-JP\?B\?)|(=\?UTF-8\?B\?))/i =~ name
-            KmClassBase::debug "hit!!"
+            Keystone::Base::Logger.instance.debug "hit!!"
             begin
-              KmClassBase::debug "hit #{$1}"
+              Keystone::Base::Logger.instance.debug "hit #{$1}"
               name = KmMailAddress::convert(name)
             rescue => e
-              KmClassBase::warn e.to_s
+              Keystone::Base::Logger.instance.warn e.to_s
             end
           end
 
-          KmClassBase::debug "name_end=|#{name}|"
-          KmClassBase::debug "address_end=|#{address}|"
+          Keystone::Base::Logger.instance.debug "name_end=|#{name}|"
+          Keystone::Base::Logger.instance.debug "address_end=|#{address}|"
           return address,name
         end  
 

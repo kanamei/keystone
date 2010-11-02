@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Keystone
   class StringUtil
     def self.int_to_splitted_path(i_value,value_length,base_folder,suffix="")

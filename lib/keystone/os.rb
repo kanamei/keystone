@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'keystone/os/abstract_os'
 
 module Keystone::Os

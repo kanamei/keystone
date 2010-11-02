@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'net/smtp'
 
 if __FILE__ ==$0
@@ -17,7 +18,7 @@ module Keystone
         @smtp_addr, @smtp_port, @retry_cnt = "127.0.0.1", 25, 0
         @message = message
         @message = Keystone::Mail::MessageFactory.create(opt) if @message == nil
-        debug "@message=#{@message}"
+        Keystone::Base::Logger.instance.debug "@message=#{@message}"
         set_option(opt)
       end
 
@@ -49,7 +50,7 @@ module Keystone
           m.sendmail(src ,@message.mail_from ,@message.mail_to)
           m.finish
         rescue => e
-          debug "try_cnt:#{try_cnt}"
+          Keystone::Base::Logger.instance.debug "try_cnt:#{try_cnt}"
           try_cnt += 1
           sleep 1
           retry if @retry_cnt >= try_cnt

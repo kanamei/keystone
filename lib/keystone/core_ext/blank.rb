@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Object
   # copy from activesupport
   def blank?

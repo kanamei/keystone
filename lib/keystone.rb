@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
 
-$KCODE = 'u'
+#$KCODE = 'u'
+
+
+# version check
+raise 'this version only for 1.9.2' unless RUBY_VERSION == '1.9.2'
 
 require 'keystone/core_ext'
 require 'keystone/base'
@@ -11,7 +16,7 @@ autoload :Moji          , 'vendor/moji'
 
 module Keystone
 
-  VERSION = '0.0.27'
+  VERSION = '0.0.30'
 
   autoload :StringUtil , 'keystone/string_util'
   autoload :Batch      , 'keystone/batch'

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Uri
   #
   def self.escape_raw(st)

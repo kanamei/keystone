@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Object
   # http://www.yohasebe.com/pages/trans-seeing-metaclasses-clearly/
   def metaclass
@@ -23,11 +24,11 @@ class Object
   
   # 1.8.7  エミュレート
   # TODO version 指定
-  def tap
-    yield(self)
-    self
-  end
-  
+  # def tap
+  #   yield(self)
+  #   self
+  # end
+  # 
   def tapp
     self.tap{|obj| p obj}
   end

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Keystone::Os
   class Linux < Unix
     def self.get

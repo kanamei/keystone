@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'net/smtp'
 
 if __FILE__ ==$0

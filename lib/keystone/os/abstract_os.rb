@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Keystone
   module Os
     class AbstractOs
@@ -26,7 +27,7 @@ module Keystone
         self_methods.delete("bin_or_usrbin")
         st = ""
         self_methods.each do |method|
-          p method
+          #p method
           st << "== #{method} ==\n  #{self.__send__(method).to_s.split("\n").join("\n  ")}\n"
         end
         return st

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Keystone::Mail
   autoload :Message,          'keystone/mail/message'
   autoload :MessageIso2022jp, 'keystone/mail/message_iso2022jp'

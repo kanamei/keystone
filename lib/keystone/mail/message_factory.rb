@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module Keystone
   module Mail
     class MessageFactory

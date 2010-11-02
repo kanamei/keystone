@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'net/smtp'
 require 'kconv'
 require 'tempfile'
@@ -72,18 +73,18 @@ module Keystone
             if line == "--#{@content_type.boundary}"
               set_parse_finish_messages
               @messages.push(KmMessage.new(@depth + 1))
-              debug "new multipart start"
+              Keystone::Base::Logger.instance.debug "new multipart start"
               return true
             end
             if line == "--#{@content_type.boundary}--"
               set_parse_finish_messages
               @is_finish_parsing = true
-              debug "multipart end"
+              Keystone::Base::Logger.instance.debug "multipart end"
               if @file_handle != nil
                 begin
                   @file_stream.close
                 rescue => e
-                  error e
+                  Keystone::Base::Logger.instance.error e
                 end
               end
               return true
@@ -101,17 +102,17 @@ module Keystone
   
       def set_special_attrs
         # do not create file for top node KmMessage
-        debug "depth=#{@depth}"
+        Keystone::Base::Logger.instance.debug "depth=#{@depth}"
         if @depth != 1
           if @content_type.content_type != :multipart_mixed && @content_type.content_type != :multipart_related && @content_type.content_type != :multipart_alternative
             if $is_save_file
-            debug "!!!!!!!! create file handle [content_type=#{@content_type.content_type}]"
+            Keystone::Base::Logger.instance.debug "!!!!!!!! create file handle [content_type=#{@content_type.content_type}]"
               $save_folder ||= "/tmp"
               tmp_file = Tempfile.new("KmReceiveMail",$save_folder)
               @file_path = tmp_file.path
               @file_handle =tmp_file
               @file_stream =tmp_file.open        
-              debug "@file_path=#{@file_path}"
+              Keystone::Base::Logger.instance.debug "@file_path=#{@file_path}"
             end
           end
         end
@@ -126,13 +127,13 @@ module Keystone
         header["from"] = KmMailAddress::get_addresses(header["from"])[0] if header["from"] != nil
     
         if @header["content-type"] != nil
-          debug "reshape_header set content-type"
+          Keystone::Base::Logger.instance.debug "reshape_header set content-type"
           @content_type = KmContentType.new(@header["content-type"])
-          debug "@content_type=#{@content_type.inspect}"
-          debug "get file"
+          Keystone::Base::Logger.instance.debug "@content_type=#{@content_type.inspect}"
+          Keystone::Base::Logger.instance.debug "get file"
         else
-          warn "content-type not fond"
-          warn @header.inspect
+          Keystone::Base::Logger.instance.warn "content-type not fond"
+          Keystone::Base::Logger.instance.warn @header.inspect
         end
         if @header["content-transfer-encoding"] != nil
           if /base64/i =~ @header["content-transfer-encoding"]
@@ -146,7 +147,7 @@ module Keystone
           elsif /quoted\-printable/i =~ @header["content-transfer-encoding"]
             @content_transfer_encoding = :quoted_printable
           else
-            error "transfer encoding not supported [#{@header["content-transfer-encoding"]}]"
+            Keystone::Base::Logger.instance.error "transfer encoding not supported [#{@header["content-transfer-encoding"]}]"
           end
         end
       end
@@ -156,7 +157,7 @@ module Keystone
       end
   
       def set_header(key,val)
-        debug "key[#{key}],val[#{val}]"
+        Keystone::Base::Logger.instance.debug "key[#{key}],val[#{val}]"
 
         key = key.downcase
         @header[key] ||= ""
@@ -172,7 +173,7 @@ module Keystone
   
       def parse_and_set_header(line)
         if /^\s/ =~ line
-          debug "multi header:#{@last_header}"
+          Keystone::Base::Logger.instance.debug "multi header:#{@last_header}"
           set_header(@last_header,line.strip)
         else
       
@@ -182,7 +183,7 @@ module Keystone
             @last_header = $1
             set_header($1,$2)
           else
-            error "error parse header!! [#{line}]"
+            Keystone::Base::Logger.instance.error "error parse header!! [#{line}]"
           end
         end
       end
@@ -202,11 +203,11 @@ module Keystone
           @body += cline
           @file_stream.write(cline) if @file_handle != nil
         elsif @content_transfer_encoding == :base64
-          debug "content_type=#{@content_type.content_type.to_s}"
-          debug "boundary=#{@content_type.boundary}"
-          debug "size=#{@file_handle.size}"
-          debug "file_path=#{@file_path}"
-          debug "!!!!!!!!!writing[#{line}]"
+          Keystone::Base::Logger.instance.debug "content_type=#{@content_type.content_type.to_s}"
+          Keystone::Base::Logger.instance.debug "boundary=#{@content_type.boundary}"
+          Keystone::Base::Logger.instance.debug "size=#{@file_handle.size}"
+          Keystone::Base::Logger.instance.debug "file_path=#{@file_path}"
+          Keystone::Base::Logger.instance.debug "!!!!!!!!!writing[#{line}]"
           @file_stream.write(Base64::decode64(line)) if @file_handle != nil
         end   
         return true
@@ -300,16 +301,16 @@ module Keystone
   
       def dump
         dump_inner(@message)
-        info "=========== body =============="
-        info(@message.body)
+        Keystone::Base::Logger.instance.info "=========== body =============="
+        Keystone::Base::Logger.instance.info(@message.body)
       end
   
       def dump_inner(message)
-        info(("-" * message.depth) + "content-type=" + message.content_type.content_type.to_s)
-        info(("-" * message.depth) + "boundary=" + message.content_type.boundary.to_s) if message.content_type.boundary != nil
-        info(("-" * message.depth) + "file_path=" + message.file_path) if message.file_path != nil
-        info(("-" * message.depth) + "content_transfer_encoding=" + message.content_transfer_encoding.to_s) if message.content_transfer_encoding != nil
-        info(("-" * message.depth) + "header=" + message.header.inspect)
+        Keystone::Base::Logger.instance.info(("-" * message.depth) + "content-type=" + message.content_type.content_type.to_s)
+        Keystone::Base::Logger.instance.info(("-" * message.depth) + "boundary=" + message.content_type.boundary.to_s) if message.content_type.boundary != nil
+        Keystone::Base::Logger.instance.info(("-" * message.depth) + "file_path=" + message.file_path) if message.file_path != nil
+        Keystone::Base::Logger.instance.info(("-" * message.depth) + "content_transfer_encoding=" + message.content_transfer_encoding.to_s) if message.content_transfer_encoding != nil
+        Keystone::Base::Logger.instance.info(("-" * message.depth) + "header=" + message.header.inspect)
         message.messages.each{|m|
           dump_inner(m)
         }

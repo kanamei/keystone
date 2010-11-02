@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'digest/md5'
 require "optparse"
 
@@ -77,7 +78,7 @@ module Keystone::Batch
       
       if Module.constants.include?("ARGV_ORIGINAL")
         
-        debug "ARGV_ORIGINAL found!!"
+        Keystone::Base::Logger.instance.debug "ARGV_ORIGINAL found!!"
         
         ARGV << "-h" if ARGV_ORIGINAL.include?("-h")
         ARGV << "--help" if ARGV_ORIGINAL.include?("--help")
@@ -85,13 +86,13 @@ module Keystone::Batch
         pg_path = File.expand_path(script_name)
         opts.banner = "Usage: script/runner #{script_name} [options]"
         
-        debug "pg_path=#{pg_path}"
+        Keystone::Base::Logger.instance.debug "pg_path=#{pg_path}"
         opts.on("-e", "--environment=name", 
           String,"specifies the environment for the runner to operate under (test/development/production).",
           "default: development")
       else
-        debug "caller=#{caller}"
-        pg_path = if File.expand_path(caller[0]) =~ /(.*):\d*\z/
+        Keystone::Base::Logger.instance.debug "caller=#{caller}"
+        pg_path = if File.expand_path(caller[0]) =~ /(.*):\d*:in `.*?'\z/
           $1
         else
           raise "must not happen!! can not get caller value"
@@ -133,7 +134,7 @@ module Keystone::Batch
       
       opts.parse!(ARGV)
       
-      info "start script(#{pg_path})"
+      Keystone::Base::Logger.instance.info "start script(#{pg_path})"
       script_started_at = Time.now
       double_process_check_worked = false
       begin
@@ -143,17 +144,17 @@ module Keystone::Batch
           pg_name = File.basename(pg_path)
           hash = Digest::MD5.hexdigest(pg_path)
           pid_file = "/tmp/.#{pg_name}.#{hash}.pid" unless pid_file
-          debug pid_file
+          Keystone::Base::Logger.instance.debug pid_file
           if File.exists?(pid_file)
             pid = File.open(pid_file).read.chomp
             pid_list = `ps ax | awk '{print $1}'`
             if (pid != nil && pid != "" ) && pid_list =~ /#{pid}/
-              warn "pid:#{pid} still running"
+              Keystone::Base::Logger.instance.warn "pid:#{pid} still running"
               double_process_check_worked = true
               return nil
             else
               if auto_recover
-                warn "lock file still exists[pid=#{pid}],but process does not found.auto_recover enabled.so process continues"
+                Keystone::Base::Logger.instance.warn "lock file still exists[pid=#{pid}],but process does not found.auto_recover enabled.so process continues"
               else
                 double_process_check_worked = true
                 raise "lock file still exists[pid=#{pid}],but process does not found.auto_recover disabled.so process can not continue"
@@ -166,13 +167,13 @@ module Keystone::Batch
         end
         return (yield process)
       rescue => e
-        error e
+        Keystone::Base::Logger.instance.error e
         send_error_mail(e,options)
       ensure
         unless double_process_check_worked
           File.delete(pid_file) if double_process_check
         end
-        info "finish script (%1.3fsec)" % (Time.now - script_started_at)
+        Keystone::Base::Logger.instance.info "finish script (%1.3fsec)" % (Time.now - script_started_at)
       end
     end
     
@@ -195,10 +196,10 @@ module Keystone::Batch
         smtp_addr = options[:error_mail_smtp_addr]
         smtp_port = options[:error_mail_smtp_port]
         
-        debug "mail_to=#{mail_to}"
-        debug "mail_from=#{mail_from}"
-        debug "smtp_addr=#{smtp_addr}"
-        debug "smtp_port=#{smtp_port}"
+        Keystone::Base::Logger.instance.debug "mail_to=#{mail_to}"
+        Keystone::Base::Logger.instance.debug "mail_from=#{mail_from}"
+        Keystone::Base::Logger.instance.debug "smtp_addr=#{smtp_addr}"
+        Keystone::Base::Logger.instance.debug "smtp_port=#{smtp_port}"
         
         body  = <<-BODY
 ==== error message ====
@@ -210,7 +211,7 @@ module Keystone::Batch
 BODY
         Keystone::Mail::Send.send(mail_from,mail_to,title,body,{:smtp_addr=>smtp_addr,:smtp_port=>smtp_port})
       else
-        warn "ERROR_MAIL_TO not defined.if you want error mail automatically,set this value."
+        Keystone::Base::Logger.instance.warn "ERROR_MAIL_TO not defined.if you want error mail automatically,set this value."
       end
     end
   end
