@@ -21,7 +21,9 @@ module Keystone
         header += create_mailto_header
         header += create_subject_header
         header += "\n"
-        header += encode_body
+        e_body = encode_body
+        header = header.encode(encode_body.encoding)
+        header += e_body
         return header
       end
       

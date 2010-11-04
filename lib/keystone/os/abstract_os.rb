@@ -22,9 +22,12 @@ module Keystone
 
       def dump
         self_methods = self.methods - Class.methods
-        self_methods.delete("version=")
-        self_methods.delete("dump")
-        self_methods.delete("bin_or_usrbin")
+        self_methods.delete(:version=)
+        self_methods.delete(:dump)
+        self_methods.delete(:bin_or_usrbin)
+        
+        Keystone::Base::Logger.instance.debug self_methods
+        
         st = ""
         self_methods.each do |method|
           #p method

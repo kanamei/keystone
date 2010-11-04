@@ -17,9 +17,9 @@ module Keystone
 
       def bin_or_usrbin(cmd,option="")
         cmd_option = "#{cmd} #{option}"
-        begin;return `/bin/#{cmd_option}` if File.exists?("/bin/#{cmd}");rescue;end
-        begin;return `/usr/bin/#{cmd_option}` if File.exists?("/usr/bin/#{cmd}");rescue;end
-        begin;return `/sbin/#{cmd_option}` if File.exists?("/sbin/#{cmd}");rescue;end
+        begin;return `/bin/#{cmd_option}`.chomp if File.exists?("/bin/#{cmd}");rescue;end
+        begin;return `/usr/bin/#{cmd_option}`.chomp if File.exists?("/usr/bin/#{cmd}");rescue;end
+        begin;return `/sbin/#{cmd_option}`.chomp if File.exists?("/sbin/#{cmd}");rescue;end
         begin;return `/usr/sbin/#{cmd_option}`.chomp;rescue;end
       end
 

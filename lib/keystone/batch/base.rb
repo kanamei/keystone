@@ -188,7 +188,7 @@ module Keystone::Batch
     def send_error_mail(exception,options)
       if options[:error_mail_to]
         host = Keystone::Os.get()
-        title = %|error occur at "#{host.hostname}" [#{exception.message}]|
+        title = %|[error][#{host.hostname}][#{exception.message}]|
         
         mail_to = options[:error_mail_to]
         mail_to = [mail_to] if mail_to.is_a?(String)
@@ -202,6 +202,8 @@ module Keystone::Batch
         Keystone::Base::Logger.instance.debug "smtp_port=#{smtp_port}"
         
         body  = <<-BODY
+==== pg ====
+#{File.expand_path($0)}
 ==== error message ====
 #{exception.message}
 ====== backtrace ======
@@ -209,9 +211,9 @@ module Keystone::Batch
 ===== environment =====
 #{host.dump}
 BODY
-        Keystone::Mail::Send.send(mail_from,mail_to,title,body,{:smtp_addr=>smtp_addr,:smtp_port=>smtp_port})
+        Keystone::Mail::Send.sendmail(mail_from,mail_to,title,body,smtp_addr,smtp_port)
       else
-        Keystone::Base::Logger.instance.warn "ERROR_MAIL_TO not defined.if you want error mail automatically,set this value."
+        Keystone::Base::Logger.instance.info "ERROR_MAIL_TO not defined.if you want error mail automatically,set this value(check execute() method option)."
       end
     end
   end
