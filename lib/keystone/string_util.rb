@@ -39,7 +39,7 @@ module Keystone
         return "@#{user}"
       end
       return dom.split('.').reverse.join(".") + "@" + user
-    end    
+    end
     
     MULTIBYTE_SPACE = [0x3000].pack("U")
     PRESERVED_QUERY_WORDS_RE = /(AND|OR|ANDNOT)/
@@ -72,7 +72,48 @@ module Keystone
           Moji.zen_to_han(str,Moji::ZEN_ALNUM | Moji::ZEN_SYMBOL).downcase,Moji::HAN_KATA | Moji::HAN_JSYMBOL)
       )
     end    
-    
+
+    #
+    # tagで指定したhtmlタグを削除する
+    #
+    # erace_all = true でタグのcontentsも丸ごと削除
+    #
+    def self.remove_html_tag(html,tag,erace_all = false)
+      poss = []
+      last_hit = 0
+      next_check_start = 0
+      str = html.clone
+      strori = str.clone
+      loop do
+        pos,size=nil,nil
+        if pos = str =~ /(<#{tag}.*?>)/
+          size = $1.size
+        else
+          break
+        end
+        last_hit = next_check_start + pos
+        next_check_start = last_hit + size
+        poss << last_hit
+        str = str[pos+size..-1]
+      end
+
+      poss.reverse!
+      str = strori
+
+      poss.each do |pos|
+        str1 = str[0..pos-1]
+        str2 = str[pos..-1]
+        str1 = '' if pos == 0
+        if erace_all
+          str2.sub!(/<#{tag}.*?>(.*?)<\/#{tag}>/mi){''}
+        else
+          str2.sub!(/<#{tag}.*?>(.*?)<\/#{tag}>/mi){$1}
+        end
+        str = str1 + str2
+      end
+      return str
+    end
+
     #
     #
     # 指定された文字列より[A-z0-9-_.]以外を取り除く
