@@ -16,7 +16,7 @@ autoload :Moji          , 'vendor/moji'
 
 module Keystone
 
-  VERSION = '0.0.30'
+  VERSION = '0.0.31'
 
   autoload :StringUtil , 'keystone/string_util'
   autoload :Batch      , 'keystone/batch'

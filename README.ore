@@ -1,0 +1,4 @@
+- updating gem
+
+rake build
+gem push pkg/keystone*******
