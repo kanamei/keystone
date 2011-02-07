@@ -41,6 +41,7 @@ module Keystone
         messages = message.split("\n")
         if messages.size > 1
           messages.each_with_index do |st,i|
+            next if st == ""
             if i == 0
               puts "[#{Time.now.strftime("%Y/%m/%d %H:%M:%S")}][#{$$}][#{log_type.to_s}] #{st}"
             else
@@ -48,10 +49,12 @@ module Keystone
             end
           end
         else
-          if is_base_info
-            puts "[#{Time.now.strftime("%Y/%m/%d %H:%M:%S")}][#{$$}][#{log_type.to_s}] #{message}"
-          else
-            puts "[#{log_type.to_s}] #{message}"
+          if message != ""
+            if is_base_info
+              puts "[#{Time.now.strftime("%Y/%m/%d %H:%M:%S")}][#{$$}][#{log_type.to_s}] #{message}"
+            else
+              puts "[#{log_type.to_s}] #{message}"
+            end
           end
         end
       end
